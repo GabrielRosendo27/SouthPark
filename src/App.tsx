@@ -6,7 +6,7 @@ import EpisodeDescription from "./components/EpisodeDescription";
 import EpisodeNumber from "./components/EpisodeNumber";
 import EpisodeThumbnail from "./components/EpisodeThumbnail";
 import EpisodeSeason from "./components/EpisodeSeason";
-import QuoteX from "./components/QuoteX";
+// import QuoteX from "./components/QuoteX";
 
 interface Episode {
   data: {
@@ -18,46 +18,75 @@ interface Episode {
     season: number;
   };
 }
-
-interface Quote {
-  quote: string;
-  character: string;
+interface Season {
+  epInicial: number;
+  epFinal: number;
 }
+
+// interface Quote {
+//   quote: string;
+//   character: string;
+// }
 
 function App() {
   const [episode, setEpisode] = React.useState<Episode[]>([]);
-  const [quotes, setQuotes] = React.useState<Quote[] | null>(null);
+  // const [quotes, setQuotes] = React.useState<Quote[] | null>(null);
 
-  async function apiFetch(): Promise<void> {
+  // const seasons: Record<string, Season> = {
+  //   season1: { epInicial: 1, epFinal: 13 },
+  //   season2: { epInicial: 14, epFinal: 27 },
+  // };
+  const seasonsData: Record<string, Season> = {
+    "Season 1": { epInicial: 1, epFinal: 13 },
+    "Season 2": { epInicial: 14, epFinal: 31 },
+  };
+
+  async function apiFetch(season: string): Promise<void> {
     const requests = [];
+    const seasonInfo = seasonsData[season];
 
-    for (let i = 1; i <= 11; i++) {
+    if (!seasonInfo) {
+      console.error("Temporada não encontrada");
+      return;
+    }
+
+    for (let i = seasonInfo.epInicial; i <= seasonInfo.epFinal; i++) {
       const url = `https://spapi.dev/api/episodes/${i}`;
       requests.push(fetch(url).then((response) => response.json()));
     }
-    const episodes = await Promise.all(requests);
+    // for (let key in seasons) {
+    //   if (seasons.hasOwnProperty(key)) {
+    //     const epInicial = seasons[key].epInicial;
+    //     const epFinal = seasons[key].epFinal;
+    //     for (let i = epInicial; i <= epFinal; i++) {
+    //       const url = `https://spapi.dev/api/episodes/${i}`;
+    //       requests.push(fetch(url).then((response) => response.json()));
+    //     }
+    //   }
+    // }
 
+    const episodes = await Promise.all(requests);
     setEpisode(episodes);
   }
-  async function quoteApiFetch(): Promise<void> {
-    const response = await fetch("https://southparkquotes.onrender.com/v1/quotes/3");
-    const data = await response.json();
-    setQuotes(data);
-  }
+  // async function quoteApiFetch(): Promise<void> {
+  //   const response = await fetch("https://southparkquotes.onrender.com/v1/quotes/3");
+  //   const data = await response.json();
+  //   setQuotes(data);
+  // }
 
   if (episode) {
     console.log(episode);
   }
-  if (quotes) {
-    console.log(quotes);
-  }
+  // if (quotes) {
+  //   console.log(quotes);
+  // }
   return (
     <>
-      {quotes && (
+      {/* {quotes && (
         <div>
           <QuoteX quotes={quotes} />
         </div>
-      )}
+      )} */}
 
       <div>
         {episode.map((episode, index) => (
@@ -73,7 +102,7 @@ function App() {
         ))}
 
         <ButtonEP apiFetch={apiFetch} />
-        <ButtonEP apiFetch={quoteApiFetch} />
+        {/* <ButtonEP apiFetch={quoteApiFetch} /> */}
       </div>
     </>
   );
