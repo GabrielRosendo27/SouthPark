@@ -5,7 +5,7 @@ import Quote from "./components/Quote/Quote";
 function App() {
   return (
     <>
-      {/* <Quote /> */}
+      <Quote />
       <InEpisode />
     </>
   );

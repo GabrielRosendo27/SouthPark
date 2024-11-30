@@ -5,7 +5,7 @@ import EpisodeDescription from "./EpisodeDescription";
 import EpisodeNumber from "./EpisodeNumber";
 import EpisodeThumbnail from "./EpisodeThumbnail";
 import EpisodeSeason from "./EpisodeSeason";
-import ButtonEP from "../ButtonEP";
+import ButtonEP from "../Buttons/ButtonEP";
 
 interface Episode {
   data: {

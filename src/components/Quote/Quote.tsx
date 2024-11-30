@@ -1,17 +1,13 @@
 import React from "react";
-import ButtonEP from "../ButtonEP";
+import QuoteButton from "../Buttons/QuoteButton";
 
 interface Quote {
   quote: string;
   character: string;
 }
 
-interface QuoteProps {
-  quotes: Quote[];
-}
-
-const Quote: React.FC<QuoteProps> = () => {
-  const [quotes, setQuotes] = React.useState<Quote>();
+const Quote = () => {
+  const [quotes, setQuotes] = React.useState<Quote[]>([]);
 
   function getRandomNumber(min: number, max: number): number {
     const num = Math.random() * (max - min) + min;
@@ -22,14 +18,23 @@ const Quote: React.FC<QuoteProps> = () => {
   async function quoteApiFetch(): Promise<void> {
     const response = await fetch("https://southparkquotes.onrender.com/v1/quotes/3");
     const data = await response.json();
+    console.log(data);
     setQuotes(data);
   }
   const n = getRandomNumber(2, 0);
 
   return (
     <div>
-      <div>{/* {quotes[n].quote} - {quotes[n].character} */}</div>
-      <ButtonEP apiFetch={quoteApiFetch} />
+      {quotes.length > 0 ? (
+        <div>
+          <p>
+            {quotes[n].quote} - {quotes[n].character}
+          </p>
+        </div>
+      ) : (
+        <p>No quotes available</p>
+      )}
+      <QuoteButton apiFetch={quoteApiFetch} />
     </div>
   );
 };
